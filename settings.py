@@ -1,0 +1,8 @@
+WIDTH = 900
+HEIGHT = 600
+TITLE = 'Botler App'
+FPS = 60
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+RED = (255,0,0)
+GREY = (169,169,169)
