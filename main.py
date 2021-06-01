@@ -99,12 +99,14 @@ class NewUser:
             with open('log.pkl', 'rb') as f:
                 data = pickle.load(f)
                 log_data.append(data)
-            if self.username in log_data:
-                self.alert_text = 'Username taken'
+            for d in log_data:
+                if self.username in str(d):
+                    self.alert_text = 'Username taken'
 
         except:
             self.save_data()
-            self.playing = False
+            self.logged_in = True
+            # self.playing = False
 
     def update(self):
         mouse_rect = pg.Rect(self.mx, self.my, 5, 5)
@@ -156,7 +158,7 @@ class NewUser:
         with open('log.pkl', 'wb') as f:
             pickle.dump(log_data, f)
 
-    def display_login(self):
+    def display_new_user(self):
         back_ground = pg.Rect(0, 0, 300, 500)
         header = pg.Rect(0, 0, 300, 60)
         pg.draw.rect(self.screen, GREY, back_ground)
@@ -200,24 +202,21 @@ class NewUser:
         if self.alert_text != '':
             self.draw_text(self.alert_text, self.basic_font, 18, RED, 50, 450)
 
-    def display_menu(self):
-        back_ground = pg.Rect(0, 0, WIDTH, HEIGHT)
-        header = pg.Rect(0, 20, WIDTH, 175)
+    def display_confirm(self):
+        back_ground = pg.Rect(0, 0, 300, 500)
+        header = pg.Rect(0, 0, 300, 60)
         pg.draw.rect(self.screen, GREY, back_ground)
         pg.draw.rect(self.screen, BLACK, header)
-        pg.draw.rect(self.screen, WHITE, self.user_rect)
-        pg.draw.rect(self.screen, WHITE, self.pass_rect)
-        self.draw_text('BotLer', self.basic_font, 100, WHITE, 200, 75)
-        self.draw_text('Please Log in:', self.basic_font, 50, BLACK, 100, 250)
-        self.draw_text('Username:', self.basic_font, 30, BLACK, 100, 350)
-        self.draw_text('Password:', self.basic_font, 30, BLACK, 100, 400)
+        self.draw_text('BotLer', self.basic_font, 50, WHITE, 70, 10)
+        self.draw_text('---Created User---', self.basic_font, 20, BLACK, 60, 65)
+        self.draw_text(f'Thank you {self.username}', self.basic_font, 20, BLACK, 60, 120)
 
     def draw(self):
         self.screen.fill(WHITE)
         if not self.logged_in:
-            self.display_login()
+            self.display_new_user()
         else:
-            self.display_menu()
+            self.display_confirm()
         pg.display.flip()
 
 
@@ -316,7 +315,9 @@ class Login:
             for d in log_data:
                 print(d)
                 if self.username in str(d):
-                    print('test')
+                    print('user match')
+                    if self.password in str(log_data[d]):
+                        print('password match')
 
         except:
             # if no file then proceed with new user
