@@ -4,6 +4,7 @@ import sys
 from os import path
 from settings import *
 
+
 class NewUser:
     def __init__(self):
         self.dt = 0
@@ -19,6 +20,7 @@ class NewUser:
         self.logged_in = False
         self.get_input = False
         self.input_type = ''
+        self.alert_text = ''
         self.final_status = ''
         pg.init()
         # self.screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -90,7 +92,7 @@ class NewUser:
         pg.quit()
         sys.exit()
 
-    def check_login(self):
+    def check_username(self):
         # this will check the users input for username and password to see if any matches in file
         log_data = []
         try:
@@ -98,12 +100,10 @@ class NewUser:
                 data = pickle.load(f)
                 log_data.append(data)
             if self.username in log_data:
-                print('test')
-
+                self.alert_text = 'Username taken'
 
         except:
-            # if no file then proceed with new user
-            self.final_status = 'new user'
+            self.save_data()
             self.playing = False
 
     def update(self):
@@ -136,11 +136,25 @@ class NewUser:
             if mouse_rect.colliderect(self.login_rect):
                 if self.select:
                     if self.username != '':
-                        if self.password != '':
-                            self.check_login()
+                        if self.password1 != '':
+                            if self.password2 != '':
+                                if self.password1 == self.password2:
+                                    self.check_username()
+                                else:
+                                    self.alert_text = "Passwords dont match"
 
     def save_data(self):
-        pass
+        log_data = []
+        try:
+            with open('log.pkl', 'rb') as f:
+                data = pickle.load(f)
+                log_data.append(data)
+        except:
+            pass
+        data = {self.username: self.password1}
+        log_data.append(data)
+        with open('log.pkl', 'wb') as f:
+            pickle.dump(log_data, f)
 
     def display_login(self):
         back_ground = pg.Rect(0, 0, 300, 500)
@@ -183,6 +197,8 @@ class NewUser:
             self.draw_text(privacy_screen2, self.basic_font, 20, BLACK, self.pass_rect2.x + 5, self.pass_rect2.y + 5)
         self.draw_text('Login', self.basic_font, 25, BLACK, self.login_rect.x + 15,
                        self.login_rect.y + 12)
+        if self.alert_text != '':
+            self.draw_text(self.alert_text, self.basic_font, 18, RED, 50, 450)
 
     def display_menu(self):
         back_ground = pg.Rect(0, 0, WIDTH, HEIGHT)
@@ -287,7 +303,7 @@ class Login:
     def quit(self):
         self.save_data()
         pg.quit()
-        # sys.exit()
+        sys.exit()
 
     def check_login(self):
         # this will check the users input for username and password to see if any matches in file
@@ -296,9 +312,11 @@ class Login:
             with open('log.pkl', 'rb') as f:
                 data = pickle.load(f)
                 log_data.append(data)
-            if self.username in log_data:
-                print('test')
 
+            for d in log_data:
+                print(d)
+                if self.username in str(d):
+                    print('test')
 
         except:
             # if no file then proceed with new user
@@ -388,11 +406,10 @@ class Login:
             self.display_menu()
         pg.display.flip()
 
+
 app = Login()
 app.run()
-print(app.final_status)
 if app.final_status == 1:
-    print('test')
     user = NewUser()
     # app.quit()
     user.run()
