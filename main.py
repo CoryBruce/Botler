@@ -57,8 +57,8 @@ class NewUser:
         self.basic_font = path.join(img_folder, 'BASIC.TTF')
         self.user_rect = pg.Rect(50, 160, 150, 30)
         self.pass_rect = pg.Rect(50, 240, 150, 30)
-        self.pass_rect2 = pg.Rect(50, 280, 150, 30)
-        self.login_rect = pg.Rect(80, 300, 100, 50)
+        self.pass_rect2 = pg.Rect(50, 320, 150, 30)
+        self.login_rect = pg.Rect(80, 380, 100, 50)
 
     def run(self):
         while self.playing:
@@ -114,19 +114,19 @@ class NewUser:
                 self.username = self.user_input
             if self.input_type == 'password1':
                 self.password1 = self.user_input
+            if self.input_type == 'password2':
+                self.password2 = self.user_input
 
         if not self.logged_in:
             if mouse_rect.colliderect(self.user_rect):
                 if self.select:
                     self.user_input = ''
                     self.get_input = True
-                    # self.username = self.user_input
                     self.input_type = 'username'
             if mouse_rect.colliderect(self.pass_rect):
                 if self.select:
                     self.user_input = ''
                     self.get_input = True
-                    # self.password = self.user_input
                     self.input_type = 'password1'
             if mouse_rect.colliderect(self.pass_rect2):
                 if self.select:
@@ -138,7 +138,6 @@ class NewUser:
                     if self.username != '':
                         if self.password != '':
                             self.check_login()
-        # print(self.input_type)
 
     def save_data(self):
         pass
@@ -157,7 +156,12 @@ class NewUser:
             pg.draw.rect(self.screen, OFF_WHITE, self.pass_rect)
         else:
             pg.draw.rect(self.screen, WHITE, self.pass_rect)
+        if self.input_type == 'password2':
+            pg.draw.rect(self.screen, OFF_WHITE, self.pass_rect2)
+        else:
+            pg.draw.rect(self.screen, WHITE, self.pass_rect2)
         pg.draw.rect(self.screen, BLACK, self.pass_rect, 2)
+        pg.draw.rect(self.screen, BLACK, self.pass_rect2, 2)
         pg.draw.rect(self.screen, WHITE, self.login_rect)
         pg.draw.rect(self.screen, BLACK, self.login_rect, 2)
         self.draw_text('BotLer', self.basic_font, 50, WHITE, 70, 10)
@@ -166,11 +170,17 @@ class NewUser:
         if self.username != '':
             self.draw_text(self.username, self.basic_font, 20, BLACK, self.user_rect.x + 5, self.user_rect.y + 5)
         self.draw_text('Password:', self.basic_font, 20, BLACK, 40, 200)
-        if self.password != '':
+        if self.password1 != '':
             privacy_screen = ''
-            for count in range(len(self.password)):
+            for count in range(len(self.password1)):
                 privacy_screen += '*'
             self.draw_text(privacy_screen, self.basic_font, 20, BLACK, self.pass_rect.x + 5, self.pass_rect.y + 5)
+        self.draw_text('Password:', self.basic_font, 20, BLACK, 40, 280)
+        if self.password2 != '':
+            privacy_screen2 = ''
+            for count in range(len(self.password2)):
+                privacy_screen2 += '*'
+            self.draw_text(privacy_screen2, self.basic_font, 20, BLACK, self.pass_rect2.x + 5, self.pass_rect2.y + 5)
         self.draw_text('Login', self.basic_font, 25, BLACK, self.login_rect.x + 15,
                        self.login_rect.y + 12)
 
