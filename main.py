@@ -150,11 +150,13 @@ class NewUser:
         try:
             with open('log.pkl', 'rb') as f:
                 data = pickle.load(f)
-                log_data.append(data)
+                # log_data.append(data)
+                log_data = data
         except:
             pass
-        data = {self.username: self.password1}
-        log_data.append(data)
+        data2 = {self.username: self.password1}
+        # log_data.append(data)
+        log_data = log_data + data2
         with open('log.pkl', 'wb') as f:
             pickle.dump(log_data, f)
 
@@ -316,6 +318,7 @@ class Login:
                 print(d)
                 if self.username in str(d):
                     print('user match')
+                    print(self.password, d)
                     if self.password in str(log_data[d]):
                         print('password match')
 
