@@ -156,7 +156,7 @@ class NewUser:
             pass
         data2 = {self.username: self.password1}
         # log_data.append(data)
-        log_data = log_data + data2
+        # log_data = log_data + data2
         with open('log.pkl', 'wb') as f:
             pickle.dump(log_data, f)
 
